@@ -2,7 +2,7 @@
 //  Untitled.swift
 //  FinancialAnalytic
 //
-//  Created by Parag Jindal on 2026-03-29.
+//  Created by Guntash Brar on 2026-03-29.
 //
 import SwiftUI
 import SwiftData
@@ -40,77 +40,79 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                VStack(spacing: 12) {
-                    Text("This Month")
-                        .font(.title2)
-                        .fontWeight(.bold)
+            ScrollView {
+                VStack(spacing: 20) {
+                    VStack(spacing: 8) {
+                        Text("This Month")
+                            .font(.title2)
+                            .fontWeight(.bold)
 
-                    Text("$\(totalSpent, specifier: "%.2f")")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
+                        Text("$\(totalSpent, specifier: "%.2f")")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
 
-                    Text("Spent so far")
-                        .foregroundStyle(.secondary)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6))
-                .cornerRadius(16)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Monthly Budget")
-                        .font(.headline)
-
-                    Text("$\(budgetAmount, specifier: "%.2f")")
-                        .font(.title3)
-
-                    ProgressView(value: progressValue)
-                        .scaleEffect(x: 1, y: 2, anchor: .center)
-                        .animation(.easeInOut(duration: 0.5), value: progressValue)
-
-                    Text("Remaining: $\(remainingBudget, specifier: "%.2f")")
-                        .foregroundStyle(remainingBudget < 0 ? .red : .green)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6))
-                .cornerRadius(16)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Recent Expenses")
-                        .font(.headline)
-
-                    if currentMonthExpenses.isEmpty {
-                        Text("No expenses added yet.")
+                        Text("Total Spending")
                             .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(currentMonthExpenses.prefix(3)) { expense in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(expense.title)
-                                        .fontWeight(.medium)
-                                    Text(expense.category)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(18)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Budget Progress")
+                            .font(.headline)
+
+                        Text("Budget: $\(budgetAmount, specifier: "%.2f")")
+                            .font(.subheadline)
+
+                        ProgressView(value: progressValue)
+                            .scaleEffect(x: 1, y: 2, anchor: .center)
+                            .animation(.easeInOut(duration: 0.5), value: progressValue)
+
+                        Text("Remaining: $\(remainingBudget, specifier: "%.2f")")
+                            .foregroundStyle(remainingBudget < 0 ? .red : .green)
+                            .fontWeight(.medium)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(18)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Recent Expenses")
+                            .font(.headline)
+
+                        if currentMonthExpenses.isEmpty {
+                            Text("No expenses added yet.")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            ForEach(currentMonthExpenses.prefix(3)) { expense in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(expense.title)
+                                            .fontWeight(.medium)
+                                        Text(expense.category)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+
+                                    Spacer()
+
+                                    Text("$\(expense.amount, specifier: "%.2f")")
+                                        .fontWeight(.semibold)
                                 }
-
-                                Spacer()
-
-                                Text("$\(expense.amount, specifier: "%.2f")")
+                                .padding(.vertical, 4)
                             }
-                            .padding(.vertical, 4)
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(18)
                 }
                 .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6))
-                .cornerRadius(16)
-
-                Spacer()
             }
-            .padding()
             .navigationTitle("Dashboard")
         }
     }

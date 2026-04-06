@@ -2,7 +2,7 @@
 //  Budget.swift
 //  FinancialAnalytic
 //
-//  Created by Parag Jindal on 2026-03-29.
+//  Created by Guntash Brar on 2026-03-29.
 //
 
 import Foundation

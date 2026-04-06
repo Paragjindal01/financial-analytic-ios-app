@@ -2,7 +2,7 @@
 //  AddExpenseView.swift
 //  FinancialAnalytic
 //
-//  Created by Parag Jindal on 2026-03-29.
+//  Created by Guntash Brar on 2026-03-29.
 //
 import SwiftUI
 import SwiftData
@@ -17,6 +17,7 @@ struct AddExpenseView: View {
     @State private var date = Date()
     @State private var budgetInput = ""
     @State private var showSavedMessage = false
+    
 
     let categories = ["Food", "Rent", "Transportation", "Entertainment", "Utilities", "Other"]
 
@@ -84,10 +85,11 @@ struct AddExpenseView: View {
             amount: amountValue,
             category: category,
             date: date
-            
         )
 
-        modelContext.insert(newExpense)
+        withAnimation {
+            modelContext.insert(newExpense)
+        }
 
         title = ""
         amount = ""

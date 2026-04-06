@@ -2,7 +2,7 @@
 //  AnalyticsView.swift
 //  FinancialAnalytic
 //
-//  Created by Parag Jindal on 2026-03-29.
+//  Created by Guntash Brar on 2026-03-29.
 //
 
 import SwiftUI
@@ -23,6 +23,10 @@ struct DailyTotal: Identifiable {
 
 struct AnalyticsView: View {
     @Query private var expenses: [Expense]
+
+    var totalSpent: Double {
+        expenses.reduce(0) { $0 + $1.amount }
+    }
 
     var categoryData: [CategoryTotal] {
         let grouped = Dictionary(grouping: expenses, by: { $0.category })
@@ -56,13 +60,40 @@ struct AnalyticsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Total Spending")
+                            .font(.headline)
+
+                        if expenses.isEmpty {
+                            Text("$0.00")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                        } else {
+                            Text("$\(totalSpent, specifier: "%.2f")")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(16)
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Spending by Category")
                             .font(.headline)
 
                         if categoryData.isEmpty {
-                            Text("No expense data available yet.")
-                                .foregroundStyle(.secondary)
+                            VStack(spacing: 8) {
+                                Image(systemName: "chart.pie")
+                                    .font(.title)
+                                    .foregroundStyle(.gray)
+
+                                Text("No expense data available yet.")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 24)
                         } else {
                             Chart(categoryData) { item in
                                 SectorMark(
@@ -71,6 +102,18 @@ struct AnalyticsView: View {
                                 .foregroundStyle(by: .value("Category", item.category))
                             }
                             .frame(height: 300)
+                            .animation(.easeInOut(duration: 0.8), value: categoryData.count)
+
+                            ForEach(categoryData) { item in
+                                HStack {
+                                    Text(item.category)
+
+                                    Spacer()
+
+                                    Text("$\(item.total, specifier: "%.2f")")
+                                        .fontWeight(.medium)
+                                }
+                            }
                         }
                     }
                     .padding()
@@ -82,8 +125,16 @@ struct AnalyticsView: View {
                             .font(.headline)
 
                         if dailyData.isEmpty {
-                            Text("No expense data available yet.")
-                                .foregroundStyle(.secondary)
+                            VStack(spacing: 8) {
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                    .font(.title)
+                                    .foregroundStyle(.gray)
+
+                                Text("No expense data available yet.")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 24)
                         } else {
                             Chart(dailyData) { item in
                                 LineMark(
@@ -97,6 +148,7 @@ struct AnalyticsView: View {
                                 )
                             }
                             .frame(height: 300)
+                            .animation(.easeInOut(duration: 0.8), value: dailyData.count)
                         }
                     }
                     .padding()
